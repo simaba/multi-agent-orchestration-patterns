@@ -1,7 +1,9 @@
-# Pattern: Sequential Agents
+# Sequential Pattern
 
-## Overview
-A sequential pattern uses a clear ordered flow where one agent completes its task before the next agent starts.
+A sequential pattern uses a fixed order of agents.
+
+## Structure
+One agent finishes its step before the next agent starts.
 
 ## Best use cases
 - staged workflows
