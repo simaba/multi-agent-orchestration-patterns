@@ -1,7 +1,7 @@
 # Multi-Agent Orchestration Patterns
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
-[![Discussions](https://img.shields.io/badge/Discussions-Join-7289da?style=flat-square&logo=github)](https://github.com/simaba/multi-agent-orchestration-patterns/discussions)
+[![Discussions](https://img.shields.io/badge/Discussions-Join-7289da?style=flat-square&logo=github)](https://github.com/simaba/agent-orchestration/discussions)
 
 A catalog of design patterns for orchestrating multiple AI agents — covering
 routing, delegation, validation, and failure handling in LLM-based multi-agent pipelines.
@@ -120,7 +120,7 @@ For each pattern, document:
 - **Where human oversight is triggered** — define thresholds before deployment
 - **How failure is detected and handled** — document the failure handling pattern used
 
-See [multi-agent-governance-framework](https://github.com/simaba/multi-agent-governance-framework)
+See [multi-agent-governance-framework](https://github.com/simaba/multi-agent-governance)
 for the full governance framework applicable to systems using these patterns.
 
 ---
@@ -129,9 +129,9 @@ for the full governance framework applicable to systems using these patterns.
 
 | Repository | Purpose |
 |---|---|
-| [multi-agent-governance-framework](https://github.com/simaba/multi-agent-governance-framework) | Governance framework for multi-agent systems |
-| [agent-system-simulator](https://github.com/simaba/agent-system-simulator) | Simulate multi-agent behavior and failure modes |
-| [ai-agent-evaluation-framework](https://github.com/simaba/ai-agent-evaluation-framework) | Evaluation metrics for AI agents |
-| [LLM-powered-Lean-Six-Sigma](https://github.com/simaba/LLM-powered-Lean-Six-Sigma) | LLM agents applied to process improvement |
+| [multi-agent-governance-framework](https://github.com/simaba/multi-agent-governance) | Governance framework for multi-agent systems |
+| [agent-system-simulator](https://github.com/simaba/agent-simulator) | Simulate multi-agent behavior and failure modes |
+| [ai-agent-evaluation-framework](https://github.com/simaba/agent-eval) | Evaluation metrics for AI agents |
+| [LLM-powered-Lean-Six-Sigma](https://github.com/simaba/lean-ai-ops) | LLM agents applied to process improvement |
 
 *Maintained by [Sima Bagheri](https://github.com/simaba) · Connect on [LinkedIn](https://www.linkedin.com/in/simaba/)*
