@@ -134,4 +134,4 @@ for the full governance framework applicable to systems using these patterns.
 | [ai-agent-evaluation-framework](https://github.com/simaba/ai-agent-evaluation-framework) | Evaluation metrics for AI agents |
 | [LLM-powered-Lean-Six-Sigma](https://github.com/simaba/LLM-powered-Lean-Six-Sigma) | LLM agents applied to process improvement |
 
-*Maintained by [Sima Bagheri](https://github.com/simaba) · Connect on [LinkedIn](https://www.linkedin.com/in/simabagheri)*
+*Maintained by [Sima Bagheri](https://github.com/simaba) · Connect on [LinkedIn](https://www.linkedin.com/in/simaba/)*
