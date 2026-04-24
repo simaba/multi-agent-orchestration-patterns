@@ -3,55 +3,71 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 [![Discussions](https://img.shields.io/badge/Discussions-Join-7289da?style=flat-square&logo=github)](https://github.com/simaba/agent-orchestration/discussions)
 
-A catalog of design patterns for orchestrating multiple AI agents — covering
-routing, delegation, validation, and failure handling in LLM-based multi-agent pipelines.
+A catalog of design patterns for orchestrating multiple AI agents, covering routing, delegation, validation, and failure handling in LLM-based multi-agent pipelines.
 
 ---
 
-## Pattern Catalog
+## Choose this repo when
 
-### Routing Patterns
+Use this repository when you need **control-flow patterns** for multi-agent systems:
+
+- how work is routed
+- how subtasks are delegated
+- how outputs are validated
+- how retries, fallbacks, and escalation are structured
+
+Do **not** start here if you need the broader oversight model. Use [`multi-agent-governance`](https://github.com/simaba/multi-agent-governance).
+
+Do **not** start here if you need evaluation criteria and pass/fail dimensions. Use [`agent-eval`](https://github.com/simaba/agent-eval).
+
+Do **not** start here if you want runnable behavior. Use [`agent-simulator`](https://github.com/simaba/agent-simulator).
+
+---
+
+## Pattern catalog
+
+### Routing patterns
 
 | Pattern | When to Use | Description |
 |---|---|---|
 | **Classifier Router** | Multiple specialized agents | A classifier agent routes tasks to the most appropriate specialist |
-| **Capability-Based Routing** | Agents with declared capabilities | Route tasks based on agent capability declarations and task requirements |
-| **Load-Balanced Round Robin** | Identical agent instances | Distribute tasks evenly across agent replicas for throughput |
-| **Priority Queue** | Mixed urgency tasks | Route high-priority tasks to dedicated agents; batch low-priority |
+| **Capability-Based Routing** | Agents with declared capabilities | Route tasks based on declared capabilities and task requirements |
+| **Load-Balanced Round Robin** | Identical agent instances | Distribute tasks across replicas for throughput |
+| **Priority Queue** | Mixed urgency tasks | Route high-priority tasks first and batch low-priority work |
 
-### Delegation Patterns
+### Delegation patterns
 
 | Pattern | When to Use | Description |
 |---|---|---|
-| **Hierarchical Delegation** | Complex decomposable tasks | Orchestrator breaks tasks into subtasks; delegates to executor agents |
-| **Parallel Fan-Out** | Independent subtasks | Execute multiple subtasks in parallel; aggregate results |
-| **Sequential Pipeline** | Order-dependent tasks | Pass outputs from one agent as inputs to the next in a fixed sequence |
+| **Hierarchical Delegation** | Complex decomposable tasks | Orchestrator breaks tasks into subtasks and delegates execution |
+| **Parallel Fan-Out** | Independent subtasks | Execute multiple subtasks in parallel and aggregate results |
+| **Sequential Pipeline** | Order-dependent tasks | Pass outputs from one agent to the next in a fixed sequence |
 | **Conditional Branch** | Decision-dependent workflows | Route to different agents based on intermediate results |
 
-### Validation Patterns
+### Validation patterns
 
 | Pattern | When to Use | Description |
 |---|---|---|
-| **Validator Agent** | High-stakes outputs | A separate agent reviews and approves outputs before they are used |
-| **Majority Vote** | Uncertain tasks | Run the same task across N agents; accept the majority result |
-| **Cross-Check** | Critical calculations | Two independent agents solve the same problem; flag divergence |
-| **Confidence Gate** | Variable certainty | Only accept outputs above a confidence threshold; escalate the rest |
+| **Validator Agent** | High-stakes outputs | Separate agent reviews and approves outputs before use |
+| **Majority Vote** | Uncertain tasks | Run the same task across N agents and accept the majority result |
+| **Cross-Check** | Critical calculations | Two independent agents solve the same problem and divergence is flagged |
+| **Confidence Gate** | Variable certainty | Only accept outputs above a threshold and escalate the rest |
 
-### Failure Handling Patterns
+### Failure-handling patterns
 
 | Pattern | When to Use | Description |
 |---|---|---|
-| **Retry with Backoff** | Transient agent failures | Retry failed tasks with exponential backoff before escalating |
-| **Fallback Agent** | Agent unavailability | Switch to a simpler/cheaper fallback agent on primary failure |
-| **Human Escalation** | Unresolvable agent failures | Route to a human when agent retries and fallbacks are exhausted |
-| **Circuit Breaker** | Cascading failures | Stop sending tasks to a failing agent; restore after health check passes |
-| **Poison Pill Isolation** | Malformed inputs | Quarantine tasks that cause repeated failures; flag for review |
+| **Retry with Backoff** | Transient failures | Retry failed tasks with exponential backoff before escalation |
+| **Fallback Agent** | Agent unavailability | Switch to a simpler fallback agent when the primary fails |
+| **Human Escalation** | Unresolvable failures | Route to a human when retries and fallbacks are exhausted |
+| **Circuit Breaker** | Cascading failures | Stop sending tasks to a failing agent until health checks recover |
+| **Poison Pill Isolation** | Malformed inputs | Quarantine repeatedly failing inputs for review |
 
 ---
 
-## Implementation Examples
+## Implementation examples
 
-### Hierarchical Delegation (Python pseudocode)
+### Hierarchical delegation (Python pseudocode)
 
 ```python
 from dataclasses import dataclass
@@ -69,13 +85,9 @@ class OrchestratorAgent:
         self.validator = validator_agent
 
     def execute(self, task: Task) -> dict[str, Any]:
-        # 1. Select the best executor
         executor = self._select_executor(task)
-
-        # 2. Delegate and get result
         result = executor.run(task)
 
-        # 3. Validate if high-stakes
         if task.priority == "high" or task.requires_human_review:
             validation = self.validator.validate(task, result)
             if not validation.approved:
@@ -84,15 +96,13 @@ class OrchestratorAgent:
         return result
 
     def _select_executor(self, task):
-        # Route based on task type — extend with classifier logic
         return self.executors[0]
 
     def _escalate_to_human(self, task, result, reason):
-        # Log escalation, notify on-call, return pending status
         return {"status": "pending_human_review", "reason": reason}
 ```
 
-### Majority Vote (Python pseudocode)
+### Majority vote (Python pseudocode)
 
 ```python
 from collections import Counter
@@ -104,7 +114,7 @@ def majority_vote(agents, task, n_votes=3):
     winner, count = vote_counts.most_common(1)[0]
 
     confidence = count / n_votes
-    if confidence < 0.67:  # No clear majority
+    if confidence < 0.67:
         return {"answer": winner, "confidence": confidence, "escalate": True}
 
     return {"answer": winner, "confidence": confidence, "escalate": False}
@@ -112,26 +122,26 @@ def majority_vote(agents, task, n_votes=3):
 
 ---
 
-## Governance Considerations
+## Governance considerations
 
 For each pattern, document:
-- **Who owns the orchestrator** — the orchestrator is the accountability anchor
-- **What gets logged** — at minimum: task ID, agent IDs involved, timestamps, outputs
-- **Where human oversight is triggered** — define thresholds before deployment
-- **How failure is detected and handled** — document the failure handling pattern used
 
-See [multi-agent-governance-framework](https://github.com/simaba/multi-agent-governance)
-for the full governance framework applicable to systems using these patterns.
+- **who owns the orchestrator**
+- **what gets logged**
+- **where human oversight is triggered**
+- **how failure is detected and handled**
+
+See [`multi-agent-governance`](https://github.com/simaba/multi-agent-governance) for the companion governance framework.
 
 ---
 
-## Ecosystem
+## Related repositories
 
-| Repository | Purpose |
+| Repository | What it adds |
 |---|---|
-| [multi-agent-governance-framework](https://github.com/simaba/multi-agent-governance) | Governance framework for multi-agent systems |
-| [agent-system-simulator](https://github.com/simaba/agent-simulator) | Simulate multi-agent behavior and failure modes |
-| [ai-agent-evaluation-framework](https://github.com/simaba/agent-eval) | Evaluation metrics for AI agents |
-| [LLM-powered-Lean-Six-Sigma](https://github.com/simaba/lean-ai-ops) | LLM agents applied to process improvement |
+| [`multi-agent-governance`](https://github.com/simaba/multi-agent-governance) | oversight model, trust tiers, accountability structure |
+| [`agent-eval`](https://github.com/simaba/agent-eval) | measurable evaluation dimensions and scenarios |
+| [`agent-simulator`](https://github.com/simaba/agent-simulator) | runnable implementation of bounded agent workflows |
+| [`lean-ai-ops`](https://github.com/simaba/lean-ai-ops) | applied workflow automation in a separate domain |
 
 *Maintained by [Sima Bagheri](https://github.com/simaba) · Connect on [LinkedIn](https://www.linkedin.com/in/simaba/)*
