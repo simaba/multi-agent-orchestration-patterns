@@ -24,6 +24,15 @@ Do **not** start here if you want runnable behavior. Use [`agent-simulator`](htt
 
 ---
 
+## Practical artifacts
+
+| Artifact | Use for |
+|---|---|
+| [`templates/orchestration-pattern-card.md`](templates/orchestration-pattern-card.md) | Documenting a reusable orchestration pattern with agents, flow, decisions, failure controls, logging, and evaluation criteria |
+| [`examples/confidence-gated-fallback-pattern.md`](examples/confidence-gated-fallback-pattern.md) | Filled example for a confidence-gated fallback workflow |
+
+---
+
 ## Pattern catalog
 
 ### Routing patterns
